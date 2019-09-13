@@ -23,16 +23,16 @@ AllData = raw_data[[ 'Addr','Time','AllEnergy']]
 Data_of_one = AllData[AllData['Addr'] == 131073]
 Data_of_one = Data_of_one.reset_index(drop=True)
 
-#定义原始的时间功率列表
+#Using a diction to record the connection between time and Power use
 orig_date_power = {}
 Time = np.array(pd.to_datetime(Data_of_one['Time']))
 
-#排序Time 序列
+#Sort the time series
 Time_sorted = np.sort(Time)
 AllEnergy = np.array(Data_of_one['AllEnergy'])
 num_of_rows = np.size(Time)
 
-#填充列表
+#Establish the Connection
 for i in range(1, num_of_rows+1):
     date = Time[i-1]
     power = int(AllEnergy[i-1])
@@ -42,7 +42,7 @@ AllEnergy_sorted = []
 for i in range(0, num_of_rows):
     AllEnergy_sorted.append( orig_date_power[Time_sorted[i]] )
     
-#设置开始和结束时间
+#Set the beginning time and end time
 start_date = Time_sorted[0]  # 开始时间
 end_date = Time_sorted[num_of_rows-1]  # 结束时间
 time_point = [start_date]
@@ -51,7 +51,7 @@ date = start_date
 i = 0
 
             
-#设置每月开始的时间
+# Set the start time of every month to shorten the running time of enery search;
 month_start = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 month_start[0] = np.datetime64("2017-05-01T00:00:00")
 month_start[1] = np.datetime64("2017-06-01T00:00:00")
@@ -74,7 +74,7 @@ month_start[17] = np.datetime64("2018-10-01T00:00:00")
 month_start[18] = np.datetime64("2018-11-01T00:00:00")
 month_start[19] = np.datetime64("2018-12-01T00:00:00")
 
-#定义对应某一个时刻的获取power填充值的函数 get_power
+#Define the function get_power() to get the power use if a certain moment;
 def get_power( date_cons, month):
     i =  3000*month
     if Time_sorted[i] >= date_cons:
